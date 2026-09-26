@@ -17,6 +17,7 @@ struct Student {
 void selectionSort(Student[], int);
 Student findMinimum(Student[], int);
 Student findMaximum(Student[], int);
+double findMean(Student[], int);
 
 int main() {
     Student students[SIZE];
@@ -40,10 +41,12 @@ int main() {
 
     // Sort the student records by student ID
     selectionSort(students, SIZE);
-    // Get the minimum
+    // Get the minimum score
     Student minimumStudent = findMinimum(students, SIZE);
-    // Get the maximum
+    // Get the maximum score
     Student maximumStudent = findMaximum(students, SIZE);
+    // Get the mean score
+    double meanScore = findMean(students, SIZE);
 
     // Open a new file for the sorted student records
     ofstream fout;
@@ -62,11 +65,17 @@ int main() {
 
     fout.close();
 
+    cout << "Read " << SIZE << " student records\n";
+    cout << "Sorted results written to 210-lab-13-grades-sorted.txt\n\n";
+    cout << "--- Summary Statistics ---\n";
+
     cout << "Minimum Score: " << minimumStudent.score
          << " (Student ID: " << minimumStudent.id << ")" << endl;
 
     cout << "Maximum Score: " << maximumStudent.score
          << " (Student ID: " << maximumStudent.id << ")" << endl;
+
+    cout << "Mean Score: " << meanScore << endl;
 
     return 0;
 }
@@ -122,4 +131,17 @@ Student findMaximum(Student students[], int size) {
     }
 
     return maximumStudent;
+}
+
+// findMean() calculates the average exam score
+// arguments: array of Student records and array size
+// returns: the mean score
+double findMean(Student students[], int size) {
+    double total = 0;
+
+    for (int i = 0; i < size; i++) {
+        total += students[i].score;
+    }
+
+    return total / size;
 }
