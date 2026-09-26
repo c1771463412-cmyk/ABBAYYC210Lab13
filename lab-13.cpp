@@ -13,7 +13,7 @@ struct Student {
 };
 
 int main() {
-    Student student[SIZE];
+    Student students[SIZE];
 
     ifstream fin;
     fin.open("210-lab-13-grades.txt");
@@ -22,6 +22,14 @@ int main() {
         cout << "Error opening input file." << endl;
         return 1;
     }
-    
+
+    for (int i = 0; i < SIZE; i++) {
+        fin >> students[i].id >> students[i].score;
+    }
+
+    fin.close();
+
+    cout << students[9].id << " " << students[9].score << endl;
+
     return 0;
 }
