@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cmath>
 using namespace std;
 
 const int SIZE = 150;
@@ -19,6 +20,7 @@ Student findMinimum(Student[], int);
 Student findMaximum(Student[], int);
 double findMean(Student[], int);
 void sortByScore(Student[], int);
+double findStandardDeviation(Student[], int, double);
 
 int main() {
     Student students[SIZE];
@@ -56,9 +58,22 @@ int main() {
     }
     sortByScore(scoreStudents, SIZE);
 
+    // Average the two middle scores because there are 150 students
     double medianScore = (scoreStudents[SIZE / 2 - 1].score + 
                           scoreStudents[SIZE / 2].score) / 2.0;
-    int medianID = scoreStudents[SIZE / 2].id;
+
+    // Find the first student whose score matches the median score
+    int medianID = 0;
+    for (int i = 0; i < SIZE; i++) {
+        if (students[i].score == medianScore) {
+            medianID = students[i].id;
+            break;
+        }
+    }
+
+    // Calculate the standard deviation using the mean score
+    double standardDeviation =
+           findStandardDeviation(students, SIZE, meanScore);
 
     // Open a new file for the sorted student records
     ofstream fout;
@@ -79,6 +94,7 @@ int main() {
 
     cout << "Read " << SIZE << " student records\n";
     cout << "Sorted results written to 210-lab-13-grades-sorted.txt\n\n";
+    // Display the summary statistics
     cout << "--- Summary Statistics ---\n";
 
     cout << "Minimum Score: " << minimumStudent.score
@@ -91,6 +107,8 @@ int main() {
 
     cout << "Median Score: " << medianScore
          << " (Student ID: " << medianID << ")" << endl;
+
+    cout << "Standard Deviation: " << standardDeviation << endl;
 
     return 0;
 }
@@ -154,6 +172,7 @@ Student findMaximum(Student students[], int size) {
 double findMean(Student students[], int size) {
     double total = 0;
 
+    // Add all exam scores together
     for (int i = 0; i < size; i++) {
         total += students[i].score;
     }
@@ -170,14 +189,29 @@ void sortByScore(Student students[], int size) {
     for (int i = 0; i < size - 1; i++) {
         indexSmallest = i;
 
+        // Find the smallest score in the remaining array
         for (int j = i + 1; j < size; j++) {
             if (students[j].score < students[indexSmallest].score) {
                 indexSmallest = j;
             }
         }
 
+        // Swap the whole student record
         Student temp = students[i];
         students[i] = students[indexSmallest];
         students[indexSmallest] = temp;
     }
+}
+
+// findStandardDeviation() calculates the standard deviation of exam scores
+// arguments: array of Student records, array size, and mean score
+// returns: the standard deviation
+double findStandardDeviation(Student students[], int size, double mean) {
+    double total = 0;
+
+    for (int i = 0; i < size; i++) {
+        total += pow(students[i].score - mean, 2);
+    }
+
+    return sqrt(total / size);
 }
