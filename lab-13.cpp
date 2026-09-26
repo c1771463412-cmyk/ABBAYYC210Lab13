@@ -18,6 +18,7 @@ void selectionSort(Student[], int);
 Student findMinimum(Student[], int);
 Student findMaximum(Student[], int);
 double findMean(Student[], int);
+void sortByScore(Student[], int);
 
 int main() {
     Student students[SIZE];
@@ -48,6 +49,17 @@ int main() {
     // Get the mean score
     double meanScore = findMean(students, SIZE);
 
+    // Copy and sort the student records by student score
+    Student scoreStudents[SIZE];
+    for (int i = 0; i < SIZE; i++) {
+        scoreStudents[i] = students[i];
+    }
+    sortByScore(scoreStudents, SIZE);
+
+    double medianScore = (scoreStudents[SIZE / 2 - 1].score + 
+                          scoreStudents[SIZE / 2].score) / 2.0;
+    int medianID = scoreStudents[SIZE / 2].id;
+
     // Open a new file for the sorted student records
     ofstream fout;
     fout.open("210-lab-13-grades-sorted.txt");
@@ -76,6 +88,9 @@ int main() {
          << " (Student ID: " << maximumStudent.id << ")" << endl;
 
     cout << "Mean Score: " << meanScore << endl;
+
+    cout << "Median Score: " << medianScore
+         << " (Student ID: " << medianID << ")" << endl;
 
     return 0;
 }
@@ -144,4 +159,25 @@ double findMean(Student students[], int size) {
     }
 
     return total / size;
+}
+
+// sortByScore() sorts students by exam score from lowest to highest
+// arguments: array of Student records and array size
+// returns: nothing
+void sortByScore(Student students[], int size) {
+    int indexSmallest;
+
+    for (int i = 0; i < size - 1; i++) {
+        indexSmallest = i;
+
+        for (int j = i + 1; j < size; j++) {
+            if (students[j].score < students[indexSmallest].score) {
+                indexSmallest = j;
+            }
+        }
+
+        Student temp = students[i];
+        students[i] = students[indexSmallest];
+        students[indexSmallest] = temp;
+    }
 }
